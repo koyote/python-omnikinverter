@@ -116,10 +116,15 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-.dmypy.json
-dmypy.json
+
+# Visual Studio Code
+.vscode
+
+# ruff
+.ruff_cache
 
 # Pyre type checker
 .pyre/
 
 setup.py
+.python-version

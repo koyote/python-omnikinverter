@@ -1,4 +1,5 @@
 """Models for Omnik Inverter."""
+
 from __future__ import annotations
 
 import re
@@ -14,12 +15,14 @@ class Inverter:
 
     serial_number: str | None
     model: str | None
-    firmware: str | None
-    firmware_slave: str | None
     solar_rated_power: int | None
     solar_current_power: int | None
     solar_energy_today: float | None
     solar_energy_total: float | None
+    alarm_code: str | None = None
+
+    firmware: str | None = None
+    firmware_slave: str | None = None
 
     # TCP only
     inverter_active: bool | None = None
@@ -40,18 +43,22 @@ class Inverter:
         """Return Inverter object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The JSON data from the Omnik Inverter.
 
         Returns:
+        -------
             An Inverter object.
 
         Raises:
+        ------
             OmnikInverterWrongValuesError: Inverter pass on
                 incorrect data (day and total are equal).
+
         """
 
         def get_value(search: str) -> Any:
-            if data[search] != "":
+            if data[search]:
                 return data[search]
             return None
 
@@ -59,25 +66,27 @@ class Inverter:
             """Check if the values are not equal to each other.
 
             Args:
+            ----
                 data_list: List of values to check.
 
             Returns:
+            -------
                 Boolean value.
+
             """
-            res = all(ele == data_list[0] for ele in data_list)
-            return res
+            return all(ele == data_list[0] for ele in data_list)
 
         if validation([data["i_eday"], data["i_eall"]]):
-            raise OmnikInverterWrongValuesError(
-                "Inverter pass on incorrect data (day and total are equal)"
-            )
+            msg = "Inverter pass on incorrect data (day and total are equal)"
+            raise OmnikInverterWrongValuesError(msg)
 
         return Inverter(
             serial_number=get_value("i_sn"),
             model=get_value("i_modle"),
             firmware=get_value("i_ver_m"),
             firmware_slave=get_value("i_ver_s"),
-            solar_rated_power=get_value("i_pow"),
+            alarm_code=get_value("i_alarm"),
+            solar_rated_power=int(get_value("i_pow")),
             solar_current_power=int(get_value("i_pow_n")),
             solar_energy_today=float(get_value("i_eday")),
             solar_energy_total=float(get_value("i_eall")),
@@ -88,10 +97,13 @@ class Inverter:
         """Return Inverter object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The HTML (webscraping) data from the Omnik Inverter.
 
         Returns:
+        -------
             An Inverter object.
+
         """
 
         def get_value(search_key: str) -> Any:
@@ -100,23 +112,23 @@ class Inverter:
                     re.Match[str],
                     re.search(f'(?<={search_key}=").*?(?=";)', data.replace(" ", "")),
                 ).group(0)
-                if match != "":
+                if match:
                     if search_key in ["webdata_now_p", "webdata_rate_p"]:
                         return int(match)
                     if search_key in ["webdata_today_e", "webdata_total_e"]:
                         return float(match)
                     return match
-                return None
+                return None  # noqa: TRY300
             except AttributeError as exception:
-                raise OmnikInverterWrongSourceError(
-                    "Your inverter has no data source from a html file."
-                ) from exception
+                msg = "Your inverter has no data source from a html file."
+                raise OmnikInverterWrongSourceError(msg) from exception
 
         return Inverter(
             serial_number=get_value("webdata_sn"),
             model=get_value("webdata_pv_type"),
             firmware=get_value("webdata_msvn"),
             firmware_slave=get_value("webdata_ssvn"),
+            alarm_code=get_value("webdata_alarm"),
             solar_rated_power=get_value("webdata_rate_p"),
             solar_current_power=get_value("webdata_now_p"),
             solar_energy_today=get_value("webdata_today_e"),
@@ -128,10 +140,13 @@ class Inverter:
         """Return Inverter object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The JS (webscraping) data from the Omnik Inverter.
 
         Returns:
+        -------
             An Inverter object.
+
         """
 
         def get_value(position: int) -> Any:
@@ -152,10 +167,10 @@ class Inverter:
                         .split(",")
                     )
 
-                if matches[position] != "":
+                if matches[position]:
                     if position in [4, 5, 6, 7]:
                         if position in [4, 5]:
-                            return int(matches[position])
+                            return int(matches[position].replace(" ", ""))
 
                         if position == 6:
                             energy_value = float(matches[position]) / 100
@@ -163,17 +178,17 @@ class Inverter:
                             energy_value = float(matches[position]) / 10
                         return energy_value
                     return matches[position].replace(" ", "")
-                return None
+                return None  # noqa: TRY300
             except AttributeError as exception:
-                raise OmnikInverterWrongSourceError(
-                    "Your inverter has no data source from a javascript file."
-                ) from exception
+                msg = "Your inverter has no data source from a javascript file."
+                raise OmnikInverterWrongSourceError(msg) from exception
 
         return Inverter(
             serial_number=get_value(0),
             model=get_value(3),
             firmware=get_value(1),
             firmware_slave=get_value(2),
+            alarm_code=get_value(8),
             solar_rated_power=get_value(4),
             solar_current_power=get_value(5),
             solar_energy_today=get_value(6),
@@ -185,12 +200,14 @@ class Inverter:
         """Return Inverter object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The binary data from the Omnik Inverter.
 
         Returns:
+        -------
             An Inverter object.
-        """
 
+        """
         return Inverter(
             **data,
             model=None,  # Not able to deduce this from raw message yet
@@ -255,10 +272,13 @@ class Device:
         """Return Device object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The JSON data from the Omnik Inverter.
 
         Returns:
+        -------
             An Device object.
+
         """
         return Device(
             signal_quality=None,
@@ -271,21 +291,24 @@ class Device:
         """Return Device object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The HTML (webscraping) data from the Omnik Inverter.
 
         Returns:
+        -------
             An Device object.
-        """
 
+        """
         for correction in [" ", "%"]:
             data = data.replace(correction, "")
 
         def get_value(search_key: str) -> Any:
             match = cast(
-                re.Match[str], re.search(f'(?<={search_key}=").*?(?=";)', data)
+                re.Match[str],
+                re.search(f'(?<={search_key}=").*?(?=";)', data),
             ).group(0)
 
-            if match != "":
+            if match:
                 if search_key in ["cover_sta_rssi"]:
                     return int(match)
                 return match
@@ -302,20 +325,24 @@ class Device:
         """Return Device object from the Omnik Inverter response.
 
         Args:
+        ----
             data: The JS (webscraping) data from the Omnik Inverter.
 
         Returns:
+        -------
             An Device object.
+
         """
         for correction in [" ", "%"]:
             data = data.replace(correction, "")
 
         def get_value(search_key: str) -> Any:
             match = cast(
-                re.Match[str], re.search(f'(?<={search_key}=").*?(?=";)', data)
+                re.Match[str],
+                re.search(f'(?<={search_key}=").*?(?=";)', data),
             ).group(0)
 
-            if match != "":
+            if match:
                 if search_key == "m2mRssi":
                     return int(match)
                 return match

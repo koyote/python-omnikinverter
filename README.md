@@ -1,4 +1,5 @@
-## Python - Omnik Inverter Client
+<!-- Banner -->
+![alt Banner of the Omnik Inverter package](https://raw.githubusercontent.com/klaasnicolaas/python-omnikinverter/main/assets/header_omnik_inverter-min.png)
 
 <!-- PROJECT SHIELDS -->
 [![GitHub Release][releases-shield]][releases]
@@ -10,12 +11,12 @@
 [![GitHub Activity][commits-shield]][commits-url]
 [![PyPi Downloads][downloads-shield]][downloads-url]
 [![GitHub Last Commit][last-commit-shield]][commits-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
+[![Open in Dev Containers][devcontainer-shield]][devcontainer]
 
-[![Code Quality][code-quality-shield]][code-quality]
 [![Maintainability][maintainability-shield]][maintainability-url]
 [![Code Coverage][codecov-shield]][codecov-url]
+
+[![Code Quality][code-quality-shield]][code-quality]
 [![Build Status][build-shield]][build-url]
 
 Asynchronous Python client for the Omnik Inverter.
@@ -40,9 +41,11 @@ A python package with which you can read the data from your Omnik Inverter. Keep
 | Ginlong  | Solis-DLS-WiFi   | JSON/HTML  |
 | Ginlong  | S3-WIFI-ST       | CGI        |
 | Hosola   | 1500TL           | JS         |
+| Hosala   | Bright 2500MTL-S | JS         |
 | Bosswerk | BW-MI300         | HTML       |
 | Bosswerk | BW-MI600         | HTML       |
 | Sofar    | 3600TLM          | HTML       |
+| Sofar    | 2200TL           | JS         |
 | Huayu    | HY-600-Pro       | HTML       |
 
 ## Installation
@@ -89,6 +92,7 @@ You can read the following data with this package:
 - Inverter Model
 - Firmware Version - Main
 - Firmware Version - Slave
+- Alarm Code
 - Rated Power (W)
 - Current Power Production (W)
 - Day Energy Production (kWh)
@@ -128,12 +132,18 @@ Thank you for being involved! :heart_eyes:
 
 ## Setting up development environment
 
-This Python project is fully managed using the [Poetry][poetry] dependency
-manager.
+The simplest way to begin is by utilizing the [Dev Container][devcontainer]
+feature of Visual Studio Code or by opening a CodeSpace directly on GitHub.
+By clicking the button below you immediately start a Dev Container in Visual Studio Code.
+
+[![Open in Dev Containers][devcontainer-shield]][devcontainer]
+
+This Python project relies on [Poetry][poetry] as its dependency manager,
+providing comprehensive management and control over project dependencies.
 
 You need at least:
 
-- Python 3.9+
+- Python 3.11+
 - [Poetry][poetry-install]
 
 Install all packages, including all development requirements:
@@ -176,7 +186,7 @@ poetry run pytest
 
 MIT License
 
-Copyright (c) 2021-2022 Klaas Schoute
+Copyright (c) 2021-2024 Klaas Schoute
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -196,22 +206,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+[energiewacht]: https://www.energiewacht.com/hoofdsite/home/nieuws/omnik-failliet/
+[omnik-inverter]: https://github.com/robbinjanssen/home-assistant-omnik-inverter
+
 <!-- MARKDOWN LINKS & IMAGES -->
 [build-shield]: https://github.com/klaasnicolaas/python-omnikinverter/actions/workflows/tests.yaml/badge.svg
 [build-url]: https://github.com/klaasnicolaas/python-omnikinverter/actions/workflows/tests.yaml
-[code-quality-shield]: https://img.shields.io/lgtm/grade/python/g/klaasnicolaas/python-omnikinverter.svg?logo=lgtm&logoWidth=18
-[code-quality]: https://lgtm.com/projects/g/klaasnicolaas/python-omnikinverter/context:python
+[code-quality-shield]: https://github.com/klaasnicolaas/python-omnikinverter/actions/workflows/codeql.yaml/badge.svg
+[code-quality]: https://github.com/klaasnicolaas/python-omnikinverter/actions/workflows/codeql.yaml
 [commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/python-omnikinverter.svg
 [commits-url]: https://github.com/klaasnicolaas/python-omnikinverter/commits/main
 [codecov-shield]: https://codecov.io/gh/klaasnicolaas/python-omnikinverter/branch/main/graph/badge.svg?token=VQTR24YFQ9
 [codecov-url]: https://codecov.io/gh/klaasnicolaas/python-omnikinverter
+[devcontainer-shield]: https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode
+[devcontainer]: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/klaasnicolaas/python-omnikinverter
 [downloads-shield]: https://img.shields.io/pypi/dm/omnikinverter
 [downloads-url]: https://pypistats.org/packages/omnikinverter
-[issues-shield]: https://img.shields.io/github/issues/klaasnicolaas/python-omnikinverter.svg
-[issues-url]: https://github.com/klaasnicolaas/python-omnikinverter/issues
 [license-shield]: https://img.shields.io/github/license/klaasnicolaas/python-omnikinverter.svg
 [last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/python-omnikinverter.svg
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2024.svg
 [maintainability-shield]: https://api.codeclimate.com/v1/badges/ec5166b74a63f375d1a1/maintainability
 [maintainability-url]: https://codeclimate.com/github/klaasnicolaas/python-omnikinverter/maintainability
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
@@ -219,11 +232,7 @@ SOFTWARE.
 [python-versions-shield]: https://img.shields.io/pypi/pyversions/omnikinverter
 [releases-shield]: https://img.shields.io/github/release/klaasnicolaas/python-omnikinverter.svg
 [releases]: https://github.com/klaasnicolaas/python-omnikinverter/releases
-[stars-shield]: https://img.shields.io/github/stars/klaasnicolaas/python-omnikinverter.svg
-[stars-url]: https://github.com/klaasnicolaas/python-omnikinverter/stargazers
 
-[energiewacht]: https://www.energiewacht.com/hoofdsite/home/nieuws/omnik-failliet/
-[omnik-inverter]: https://github.com/robbinjanssen/home-assistant-omnik-inverter
 [poetry-install]: https://python-poetry.org/docs/#installation
 [poetry]: https://python-poetry.org
 [pre-commit]: https://pre-commit.com
