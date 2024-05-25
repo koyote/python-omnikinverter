@@ -124,7 +124,6 @@ async def test_device_html(aresponses: ResponsesMockServer) -> None:
         assert device.firmware == "ME_08_0102_2.03"
         assert device.ip_address == "192.168.0.106"
 
-
 @pytest.mark.asyncio
 async def test_inverter_cgi(aresponses: ResponsesMockServer) -> None:
     """Test request from an Inverter - CGI source."""
@@ -188,8 +187,6 @@ async def test_device_cgi(aresponses: ResponsesMockServer) -> None:
         assert device.firmware == "00010130"
         assert device.ip_address == "192.168.0.106"
 
-
-@pytest.mark.asyncio
 async def test_inverter_without_session(aresponses: ResponsesMockServer) -> None:
     """Test request from an Inverter - HTML source and without session."""
     aresponses.add(
